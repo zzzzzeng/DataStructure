@@ -90,5 +90,5 @@ void calculate_largest_rectangle_area(int heights[], int n) {
         int width = stack.is_empty() ? i : n - stack.peek() - 1;
         max_area = max(max_area, height * width);
     }
-    cout << "Largest rectangle area: " << max_area << endl;
+    cout << "矩形最大面积: " << max_area << endl;
 }
