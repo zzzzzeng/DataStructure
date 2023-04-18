@@ -3,20 +3,20 @@
 #include <stdio.h>
 #include<string.h>
 
-#define N_OPTR 9 //ÔËËã·û×ÜÊı
-typedef enum { ADD, SUB, MUL, DIV, POW, FAC, L_P, R_P, EOE } Operator; //ÔËËã·û¼¯ºÏ
-//¼Ó¡¢¼õ¡¢³Ë¡¢³ı¡¢³Ë·½¡¢½×³Ë¡¢×óÀ¨ºÅ¡¢ÓÒÀ¨ºÅ¡¢ÆğÊ¼·ûÓëÖÕÖ¹·û
+#define N_OPTR 9 //è¿ç®—ç¬¦æ€»æ•°
+typedef enum { ADD, SUB, MUL, DIV, POW, FAC, L_P, R_P, EOE } Operator; //è¿ç®—ç¬¦é›†åˆ
+//åŠ ã€å‡ã€ä¹˜ã€é™¤ã€ä¹˜æ–¹ã€é˜¶ä¹˜ã€å·¦æ‹¬å·ã€å³æ‹¬å·ã€èµ·å§‹ç¬¦ä¸ç»ˆæ­¢ç¬¦
 
-const char pri[N_OPTR][N_OPTR] = { //ÔËËã·ûÓÅÏÈµÈ¼¶ [Õ»¶¥] [µ±Ç°]
-	/*              |-------------------- µ± Ç° ÔË Ëã ·û --------------------| */
+const char pri[N_OPTR][N_OPTR] = { //è¿ç®—ç¬¦ä¼˜å…ˆç­‰çº§ [æ ˆé¡¶] [å½“å‰]
+	/*              |-------------------- å½“ å‰ è¿ ç®— ç¬¦ --------------------| */
 	/*              +      -      *      /      ^      !      (      )      \0 */
 	/* --  + */    '>',   '>',   '<',   '<',   '<',   '<',   '<',   '>',   '>',
 	/* |   - */    '>',   '>',   '<',   '<',   '<',   '<',   '<',   '>',   '>',
-	/* Õ»  * */    '>',   '>',   '>',   '>',   '<',   '<',   '<',   '>',   '>',
-	/* ¶¥  / */    '>',   '>',   '>',   '>',   '<',   '<',   '<',   '>',   '>',
-	/* ÔË  ^ */    '>',   '>',   '>',   '>',   '>',   '<',   '<',   '>',   '>',
-	/* Ëã  ! */    '>',   '>',   '>',   '>',   '>',   '>',   ' ',   '>',   '>',
-	/* ·û  ( */    '<',   '<',   '<',   '<',   '<',   '<',   '<',   '=',   ' ',
+	/* æ ˆ  * */    '>',   '>',   '>',   '>',   '<',   '<',   '<',   '>',   '>',
+	/* é¡¶  / */    '>',   '>',   '>',   '>',   '<',   '<',   '<',   '>',   '>',
+	/* è¿  ^ */    '>',   '>',   '>',   '>',   '>',   '<',   '<',   '>',   '>',
+	/* ç®—  ! */    '>',   '>',   '>',   '>',   '>',   '>',   ' ',   '>',   '>',
+	/* ç¬¦  ( */    '<',   '<',   '<',   '<',   '<',   '<',   '<',   '=',   ' ',
 	/* |   ) */    ' ',   ' ',   ' ',   ' ',   ' ',   ' ',   ' ',   ' ',   ' ',
 	/* -- \0 */    '<',   '<',   '<',   '<',   '<',   '<',   '<',   ' ',   '='
 };
@@ -37,17 +37,17 @@ int choose(char c) {
 	default:exit(-1);
 	}
 }
-char orderBetween(char c1, char c2) { //ÅĞ¶ÏÓÅÏÈ¶È
+char orderBetween(char c1, char c2) { //åˆ¤æ–­ä¼˜å…ˆåº¦
 	return pri[choose(c1)][choose(c2)];
 }
 
 float readNumber(char*& S, Stack<float>& opnd) {
 	float x = 0.0;
-	bool point = false;//ÅĞ¶ÏÊÇ·ñÎªĞ¡Êı
-	int i = 0;//¼ÆĞ¡ÊıµãºóµÄÎ»Êı
+	bool point = false;//åˆ¤æ–­æ˜¯å¦ä¸ºå°æ•°
+	int i = 0;//è®¡å°æ•°ç‚¹åçš„ä½æ•°
 	while (isdigit(*S) || *S == '.') {
 		if (*S != '.') {
-			if (point == false) 	x = x * 10 + (*(S++) - 48);//¼õÈ¥48,ASCII×ª³ÉÊı×Ö
+			if (point == false) 	x = x * 10 + (*(S++) - 48);//å‡å»48,ASCIIè½¬æˆæ•°å­—
 			if (point == true) { x = x * 10 + (*(S++) - 48); i++; }
 		}
 		else { S++; point = true; }
@@ -55,7 +55,7 @@ float readNumber(char*& S, Stack<float>& opnd) {
 	int temp = 1;
 	for (int j = 0; j < i; j++) temp *= 10;
 	x = x / temp;
-	opnd.push(x);//Ñ¹Èë²Ù×÷ÊıÕ»
+	opnd.push(x);//å‹å…¥æ“ä½œæ•°æ ˆ
 	return x;
 }
 
@@ -63,7 +63,7 @@ float fac(int n) { return (2 > n) ? 1 : n * fac(n - 1); }
 float calcu(char optr, float opnd) { return fac(opnd); }
 float calcu(float opnd1, char op, float opnd2) {
 	float result = 1;
-	switch (op) //ÅĞ¶ÏÔËËã·û
+	switch (op) //åˆ¤æ–­è¿ç®—ç¬¦
 	{
 	case '+': {result = opnd1 + opnd2; return result; }
 	case '-': {result = opnd1 - opnd2; return result; }
@@ -80,7 +80,6 @@ float evaluate(char* S) {
 	while (!optr.empty()) {
 		if (isdigit(*S)) {
 			readNumber(S, opnd);
-			//append(RPN, opnd.top());
 		}
 		else
 			switch (orderBetween(optr.top(), *S)) {
@@ -95,27 +94,27 @@ float evaluate(char* S) {
 				if ('!' == op) {
 					
 					float pOpnd = opnd.top(); opnd.pop();
-					opnd.push(calcu(op, pOpnd));//ÊµÊ©Ò»ÔªÔËËã
+					opnd.push(calcu(op, pOpnd));//å®æ–½ä¸€å…ƒè¿ç®—
 				}
 				else {
 					float pOpnd2 = opnd.top(); opnd.pop();
 					float pOpnd1 = opnd.top(); opnd.pop();
-					opnd.push(calcu(pOpnd1, op, pOpnd2));//ÊµÊ©¶şÔªÔËËã
+					opnd.push(calcu(pOpnd1, op, pOpnd2));//å®æ–½äºŒå…ƒè¿ç®—
 				}
 				break;
 			}
 			default:exit(-1);
 			}//switch
 	}//while
-	float Result = opnd.top();//ÏÈ×ª´æ¼ÆËã½á¹û,ÔÙpop
+	float Result = opnd.top();//å…ˆè½¬å­˜è®¡ç®—ç»“æœ,å†pop
 	opnd.pop();
-	return Result;//µ¯³ö²¢·µ»Ø×îºóµÄ¼ÆËã½á¹û
+	return Result;//å¼¹å‡ºå¹¶è¿”å›æœ€åçš„è®¡ç®—ç»“æœ
 }
 
 int main() {
 	int i;
 	char test[10];
-	cout << "ÇëÊäÈë" << endl;
+	cout << "è¯·è¾“å…¥" << endl;
 	
 	cin >> test;
 	
